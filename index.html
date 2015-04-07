@@ -1,0 +1,69 @@
+<!doctype html>
+<html>
+	<head></head>
+	<body>
+		<header>
+			<h2>An illustration of Web Components</h2>
+			<p>
+				We are going to create a custom element called 'pimped-list'(not that pimpled
+				though), and then we will use it list the references for this demo.
+			</p>
+		</header>
+		<section>
+			<template>
+				<!-- this is the template for the pimped-list component, it will make up our Shadow DOM
+				-->
+				<ul>
+					<!-- lets create a '<li>' insertion point -->
+					<content select="li"></li>
+				</ul>
+
+				<!-- the style for out template -->
+				<style>
+					ul{
+						list-style-type: none;
+						list-style-position: outside;
+						list-style-image: none;
+						padding-left: 0;
+					}
+					ul ::content li{
+						color: blue;
+						height: 1.5em;
+					}
+					ul ::content li:hover{
+						color: red;
+					}
+				</style>
+			</template>
+		</section>
+		<footer>
+			<h3>References</h3>
+			<pimped-list>
+				<li>An article on css-tricks.com by Rob Dodson @rob_dodson</li>
+				<li>from webcomponents.org</li>
+				<li>from polymer-project.org</li>
+				<li>from the x-tags project by the guys at mozilla</li>
+			</pimped-list>
+		</footer>
+		<script>
+			//select the shadow dom to use
+			var template = document.querySelector("template");
+
+			//now, lets create a custom element that will describe our 'pimped-list' element
+
+			//create a prototype for a new element that extends HTMLElement
+			var PimpedListProto = Object.create(HTMLElement.prototype);
+
+			//set up the createdCallback() method on the newly create object and init the new
+			//element
+			PimpedListProto.createdCallback = function(){
+				var root = this.createShadowRoot();
+				root.appendChild(document.importNode(template.content, true));
+			};
+
+			//register our newly created element using the document.registerElement() method
+			document.registerElement('pimped-list', {prototype: PimpedListProto});
+			//now the new 'pimped-list' element is ready for use
+		</script>
+	</body>
+</html>
